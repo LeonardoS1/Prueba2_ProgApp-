@@ -24,3 +24,17 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+.encabezado{
+    --background: radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%);
+    --color: #FFFFFF;
+}
+
+.degradado{
+    --background: linear-gradient(rgb(74, 136, 136) 100%);
+    --color: #FFFFFF;
+}
+
+.boton{
+    --background: radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%);
+}

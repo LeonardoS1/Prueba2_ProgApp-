@@ -1,15 +1,50 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { DbService } from './services/db.service';
 
 const routes: Routes = [
   {
-    path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
   },
   {
-    path: '',
-    redirectTo: 'home',
+    path: 'login',
+    redirectTo: 'login',
     pathMatch: 'full'
+  },
+  {
+    path: 'principal',
+    redirectTo: 'principal',
+    pathMatch: 'full'
+  },
+  {
+    path: 'restablecer',
+    redirectTo: 'restablecer',
+    pathMatch: 'full'
+  },
+  {
+    path: '**',
+    redirectTo: 'e404',
+    pathMatch: 'full'
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
+  },
+  {
+    path: 'principal',
+    loadChildren: () => import('./pages/principal/principal.module').then( m => m.PrincipalPageModule),
+    /*canActivate: [DbService]*/
+  },
+  {
+    path: 'restablecer',
+    loadChildren: () => import('./pages/restablecer/restablecer.module').then( m => m.RestablecerPageModule)
+    
+  },
+  {
+    path: 'e404',
+    loadChildren: () => import('./pages/e404/e404.module').then( m => m.E404PageModule)
   },
 ];
 
