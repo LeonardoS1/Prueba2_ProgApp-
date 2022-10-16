@@ -49,10 +49,15 @@ export class LoginPage implements OnInit {
       try {
         let respuesta = await this.api.almacenarPersona(this.mdl_rut, this.mdl_nombre, this.mdl_apellido, this.mdl_sueldo);
         if (respuesta['result'][0].RESPUESTA == 'OK') {
-            that.pr
+            that.presentToast('Persona almacenada correctamente');
+            that.limpiar();
+        } else {
+          that.presentToast('No se pudo almacenar la persona');
         }
+      } catch (error) {
+        //TODO INDICAR QUE OCURRIÓ UN ERROR CON LA API
       }
-    })
-    
-}
 
+      data.dismiss(); 
+    });
+}
