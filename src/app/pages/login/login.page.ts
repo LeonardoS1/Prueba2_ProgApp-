@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
 import { DbService } from 'src/app/services/db.service';
-import { PrincipalPage } from '../principal/principal.page';
+import { LoadingController, ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -11,56 +10,54 @@ import { PrincipalPage } from '../principal/principal.page';
 })
 export class LoginPage implements OnInit {
   
-  mdl_user: string = '';
-  mdl_pass: string = '';
+  mdl_rut: string = '';
+  mdl_nombre: string = '';
+  mdl_apellido: string = '';
+  mdl_sueldo: string = '';
 
   constructor(private router: Router,
-    private alertController: AlertController,
-    private db: DbService) { }
+    private api: DbService,
+    private loadingController: LoadingController,
+    private toastController: ToastController) { }
 
   ngOnInit() {
-  }
-
-  ingresar(){
-    if (!this.db.validarCredenciales(this.mdl_user,this.mdl_pass)){
-      this.mostrarMensaje('credenciales inválidas');
-    }else{
-      let extras: NavigationExtras = {
-        state: {
-          usuario: this.mdl_user,
-          cualquierCosa: 'Cualquier valor'
-        }
-      }
-      this.router.navigate(['principal']),extras;
-      console.log('prueba1')
-    }
-  }
-
-  async mostrarMensaje(mensaje){
-
-    const alert = await this.alertController.create({
-      header: 'Atención!',
-      message: mensaje,
-      buttons: ['OK'],
+    this.loadingController.create({
+      message: 'Obteniendo Información...',
+      spinner: 'lines'
+    }).then(data => {
+      data.dismiss();
     });
-
-    await alert.present();
-
   }
-  navegar() {
 
+  navegar() {
     let extras: NavigationExtras = {
+      replaceUrl: true,
       state: {
-        usuario: this.mdl_user,
-        cualquierCosa: 'Cualquier valor'
+
       }
     }
-
-    this.router.navigate(['principal'], extras);
+    this.router.navigate(['listar'], extras);
   }
 
-  navigate1(){
-    this.router.navigate(['/restablecer']) 
-  }
+  almacenar(){
+    let that= this;
+    this.loadingController.create({
+      message: 'Almacenando persona...',
+      spinner: 'lines'
+    }).then(async data => {
+      data.present();
+      try {
+        let respuesta = await this.api.almacenarPersona(this.mdl_rut, this.mdl_nombre, this.mdl_apellido, this.mdl_sueldo);
+        if (respuesta['result'][0].RESPUESTA == 'OK') {
+            that.presentToast('Persona almacenada correctamente');
+            that.limpiar();
+        } else {
+          that.presentToast('No se pudo almacenar la persona');
+        }
+      } catch (error) {
+        //TODO INDICAR QUE OCURRIÓ UN ERROR CON LA API
+      }
+
+      data.dismiss(); 
+    });
 }
-
